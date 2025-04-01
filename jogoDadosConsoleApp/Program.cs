@@ -5,13 +5,36 @@ namespace jogoDados.ConsoleApp
     {
         private static void Main(string[] args)
         {
+            const int limiteLinhaChegada = 30;
+
             while (true)
             {
-                ExibirCabeçalho();
+                int posicaoUsuario = 0;
 
-                int resultado = RolarDado();
+                bool jogoEmAndamento = true;
 
-                ExibirResultado(resultado);
+                while (jogoEmAndamento) 
+                {
+                    ExibirCabeçalho();
+
+                    int resultado = RolarDado();
+
+                    ExibirResultado(resultado);
+
+                    posicaoUsuario += resultado;
+
+
+                    if (posicaoUsuario >= limiteLinhaChegada)
+                    {
+                        Console.WriteLine("Parabéns! Você alcançou a linha de chegada!");
+                        jogoEmAndamento= false;
+                    }
+                    else Console.WriteLine($"O jogador está na posição: {posicaoUsuario} de {limiteLinhaChegada}");
+
+                    Console.WriteLine("Digite Enter para continuar...");
+                    Console.ReadLine();
+                }
+
                 string opcaoContinuar=ExibirMenuContinuar();
 
                 if (opcaoContinuar != "s") break;
