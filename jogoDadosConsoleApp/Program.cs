@@ -13,7 +13,8 @@ namespace jogoDados.ConsoleApp
                 int posicaoComputador = 0;
 
                 bool jogoEmAndamento = true;
-                
+
+                Console.Clear();
                 Console.Write("Digite o seu nome de Usuário: ");
                 string nomeJogador = Console.ReadLine()!;
 
@@ -43,7 +44,7 @@ namespace jogoDados.ConsoleApp
                     else 
                     { 
                         Console.WriteLine("********************************************************");
-                        Console.WriteLine($"\nO jogador está na posição: {posicaoUsuario} de {limiteLinhaChegada}.");
+                        Console.WriteLine($"\n{nomeJogador} está na posição: {posicaoUsuario} de {limiteLinhaChegada}.");
                     }
 
                     posicaoComputador += resultadoComputador;
@@ -66,7 +67,7 @@ namespace jogoDados.ConsoleApp
 
                 string opcaoContinuar=ExibirMenuContinuar();
 
-                if (opcaoContinuar != "s") break;
+                if (opcaoContinuar != "S") break;
 
             }
         }
@@ -96,7 +97,7 @@ namespace jogoDados.ConsoleApp
 
         static int RodadaJogador(string nomeJogador)
         {
-            Console.WriteLine($"\n\nTurno do(a) {nomeJogador}:");
+            Console.WriteLine($"\nTurno do(a) {nomeJogador}:");
 
             Random geradorNumeros = new Random();
 
