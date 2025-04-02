@@ -13,6 +13,7 @@ namespace jogoDados.ConsoleApp
                 int posicaoComputador = 0;
 
                 int casaAvanco = 3;
+                int casaRecuo = 2;
 
                 bool jogoEmAndamento = true;
 
@@ -25,9 +26,8 @@ namespace jogoDados.ConsoleApp
                     Console.Clear();
                     ExibirCabeçalho(nomeJogador,posicaoUsuario,posicaoComputador);
 
-                    (posicaoUsuario, posicaoComputador) = RolarDado(nomeJogador,posicaoUsuario,posicaoComputador,casaAvanco);
+                    (posicaoUsuario, posicaoComputador) = RolarDado(nomeJogador,posicaoUsuario,posicaoComputador,casaAvanco,casaRecuo);
 
-                    //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
                     //Rodada extra: Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
 
 
@@ -74,9 +74,9 @@ namespace jogoDados.ConsoleApp
             Console.WriteLine("------------------------------------------------------------");
         }
 
-        static (int , int ) RolarDado(string nomeJogador, int posicaoUsuario, int posicaoComputador, int casaAvanco)
+        static (int , int ) RolarDado(string nomeJogador, int posicaoUsuario, int posicaoComputador, int casaAvanco, int casaRecuo)
         {
-            posicaoUsuario = RodadaJogador(nomeJogador, posicaoUsuario,casaAvanco);
+            posicaoUsuario = RodadaJogador(nomeJogador, posicaoUsuario,casaAvanco,casaRecuo);
 
             Random geradorNumeros = new Random();
             Console.WriteLine("\n\nTurno do Computador:");
@@ -86,17 +86,22 @@ namespace jogoDados.ConsoleApp
             Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
             posicaoComputador += resultadoComputador;
 
-            //Avanço extra: Se o competidor parar em uma posição específica(ex.: 5, 10, 15), ele avança +3 casas.
             if (posicaoComputador == 5 || posicaoComputador == 10 || posicaoComputador == 15)
             {
                 Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador avançará {casaAvanco} casas!");
                 posicaoComputador += casaAvanco;
             }
+            //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
+            else if (posicaoComputador == 7 || posicaoComputador == 13 || posicaoComputador == 20)
+            {
+                Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador recuará {casaRecuo} casas!");
+                posicaoComputador -= casaRecuo;
+            }
 
             return (posicaoUsuario, posicaoComputador);
         }
 
-        static int RodadaJogador(string nomeJogador, int posicaoUsuario, int casaAvanco)
+        static int RodadaJogador(string nomeJogador, int posicaoUsuario, int casaAvanco, int casaRecuo)
            
         {
             Console.WriteLine($"\nTurno do(a) {nomeJogador}:");
@@ -113,12 +118,17 @@ namespace jogoDados.ConsoleApp
             posicaoUsuario += resultadoUsuario;
             Console.WriteLine($"\n\nO valor sorteado para {nomeJogador} foi {resultadoUsuario}!");
 
-            //Avanço extra: Se o competidor parar em uma posição específica(ex.: 5, 10, 15), ele avança +3 casas.
             if (posicaoUsuario == 5 || posicaoUsuario == 10 || posicaoUsuario == 15)
             {
                 Console.WriteLine($"Parou na casa {posicaoUsuario}. Você avançará {casaAvanco} casas, {nomeJogador}!");
                 posicaoUsuario += casaAvanco;
                 Console.ReadLine();
+            }
+            //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
+            else if (posicaoUsuario == 7 || posicaoUsuario == 13 || posicaoUsuario == 20)
+            {
+                Console.WriteLine($"Parou na casa {posicaoUsuario}. Você recuará {casaRecuo} casas!");
+                posicaoUsuario -= casaRecuo;
             }
 
 
