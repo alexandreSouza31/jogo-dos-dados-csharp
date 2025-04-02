@@ -28,14 +28,10 @@ namespace jogoDados.ConsoleApp
 
                     (posicaoUsuario, posicaoComputador) = RolarDado(nomeJogador,posicaoUsuario,posicaoComputador,casaAvanco,casaRecuo);
 
-                    //Rodada extra: Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
-
-
                     if (posicaoUsuario >= limiteLinhaChegada)
                     {
                         Console.Clear();
                         Console.WriteLine("\nParabéns! Você alcançou a linha de chegada!");
-                        Console.ReadLine();
                         ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
 
                         jogoEmAndamento = false;
@@ -48,7 +44,6 @@ namespace jogoDados.ConsoleApp
                         Console.Clear();
                         Console.WriteLine("\nQue pena o Computador alcançou a linha de chegada!");
                         ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
-                        Console.ReadLine() ;
                         jogoEmAndamento = false;
 
                         continue;
@@ -77,26 +72,10 @@ namespace jogoDados.ConsoleApp
         static (int , int ) RolarDado(string nomeJogador, int posicaoUsuario, int posicaoComputador, int casaAvanco, int casaRecuo)
         {
             posicaoUsuario = RodadaJogador(nomeJogador, posicaoUsuario,casaAvanco,casaRecuo);
-
-            Random geradorNumeros = new Random();
-            Console.WriteLine("\n\nTurno do Computador:");
+            Console.Write("Digite Enter para continuar...");
             Console.ReadLine();
 
-            int resultadoComputador = geradorNumeros.Next(1, 7);
-            Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
-            posicaoComputador += resultadoComputador;
-
-            if (posicaoComputador == 5 || posicaoComputador == 10 || posicaoComputador == 15)
-            {
-                Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador avançará {casaAvanco} casas!");
-                posicaoComputador += casaAvanco;
-            }
-            //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
-            else if (posicaoComputador == 7 || posicaoComputador == 13 || posicaoComputador == 20)
-            {
-                Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador recuará {casaRecuo} casas!");
-                posicaoComputador -= casaRecuo;
-            }
+            posicaoComputador = RodadaComputador(posicaoComputador, casaAvanco, casaRecuo);
 
             return (posicaoUsuario, posicaoComputador);
         }
@@ -124,7 +103,7 @@ namespace jogoDados.ConsoleApp
                 posicaoUsuario += casaAvanco;
                 Console.ReadLine();
             }
-            //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
+
             else if (posicaoUsuario == 7 || posicaoUsuario == 13 || posicaoUsuario == 20)
             {
                 Console.WriteLine($"Parou na casa {posicaoUsuario}. Você recuará {casaRecuo} casas!");
@@ -133,6 +112,32 @@ namespace jogoDados.ConsoleApp
 
 
             return posicaoUsuario;
+        }
+
+        static int RodadaComputador( int posicaoComputador, int casaAvanco, int casaRecuo)
+
+        {
+            Console.WriteLine("\n\nTurno do Computador:");
+
+            Random geradorNumeros = new Random();
+            int resultadoComputador = geradorNumeros.Next(1, 7);
+            Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
+            posicaoComputador += resultadoComputador;
+
+            if (posicaoComputador == 5 || posicaoComputador == 10 || posicaoComputador == 15)
+            {
+                Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador avançará {casaAvanco} casas!");
+                posicaoComputador += casaAvanco;
+                Console.ReadLine();
+            }
+
+            else if (posicaoComputador == 7 || posicaoComputador == 13 || posicaoComputador == 20)
+            {
+                Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador recuará {casaRecuo} casas!");
+                posicaoComputador -= casaRecuo;
+            }
+
+            return posicaoComputador;
         }
 
         static string ExibirMenuContinuar(){
