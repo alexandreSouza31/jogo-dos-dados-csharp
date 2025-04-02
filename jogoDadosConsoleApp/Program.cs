@@ -12,6 +12,8 @@ namespace jogoDados.ConsoleApp
                 int posicaoUsuario = 0;
                 int posicaoComputador = 0;
 
+                int casaAvanco = 3;
+
                 bool jogoEmAndamento = true;
 
                 Console.Clear();
@@ -23,17 +25,15 @@ namespace jogoDados.ConsoleApp
                     Console.Clear();
                     ExibirCabeçalho(nomeJogador,posicaoUsuario,posicaoComputador);
 
-                    var (resultadoUsuario, resultadoComputador )= RolarDado(nomeJogador);
+                    (posicaoUsuario, posicaoComputador) = RolarDado(nomeJogador,posicaoUsuario,posicaoComputador,casaAvanco);
 
-                    posicaoUsuario += resultadoUsuario;
-
-                    //Avanço extra: Se o competidor parar em uma posição específica(ex.: 5, 10, 15), ele avança +3 casas.
                     //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
                     //Rodada extra: Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
 
 
                     if (posicaoUsuario >= limiteLinhaChegada)
                     {
+                        Console.Clear();
                         Console.WriteLine("\nParabéns! Você alcançou a linha de chegada!");
                         Console.ReadLine();
                         ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
@@ -42,15 +42,6 @@ namespace jogoDados.ConsoleApp
 
                         continue;
                     }
-
-                    else 
-                    { 
-                        Console.WriteLine("********************************************************");
-                        Console.WriteLine($"\n{nomeJogador} está na posição: {posicaoUsuario} de {limiteLinhaChegada}.");
-                    }
-
-                    posicaoComputador += resultadoComputador;
-
 
                     if (posicaoComputador >= limiteLinhaChegada)
                     {
@@ -62,8 +53,6 @@ namespace jogoDados.ConsoleApp
 
                         continue;
                     }
-                    else Console.WriteLine($"\nO Computador está na posição: {posicaoComputador} de {limiteLinhaChegada}.");
-                    Console.WriteLine("********************************************************");
 
                     Console.WriteLine("\nDigite Enter para continuar...");
                     Console.ReadLine();
@@ -78,7 +67,6 @@ namespace jogoDados.ConsoleApp
 
         static void ExibirCabeçalho(string nomeJogador, int posicaoUsuario, int posicaoComputador)
         {
-            //Console.Clear();
             Console.WriteLine("------------------------------------------------------------");
             Console.WriteLine("      Jogo de Dados");
             Console.WriteLine($"\n Nome do jogador: {nomeJogador}");
@@ -86,9 +74,9 @@ namespace jogoDados.ConsoleApp
             Console.WriteLine("------------------------------------------------------------");
         }
 
-        static (int resultadoUsuário,int resultadoComputador) RolarDado(string nomeJogador="")
+        static (int , int ) RolarDado(string nomeJogador, int posicaoUsuario, int posicaoComputador, int casaAvanco)
         {
-            int resultadoUsuario = RodadaJogador(nomeJogador);
+            posicaoUsuario = RodadaJogador(nomeJogador, posicaoUsuario,casaAvanco);
 
             Random geradorNumeros = new Random();
             Console.WriteLine("\n\nTurno do Computador:");
@@ -96,12 +84,20 @@ namespace jogoDados.ConsoleApp
 
             int resultadoComputador = geradorNumeros.Next(1, 7);
             Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
+            posicaoComputador += resultadoComputador;
 
+            //Avanço extra: Se o competidor parar em uma posição específica(ex.: 5, 10, 15), ele avança +3 casas.
+            if (posicaoComputador == 5 || posicaoComputador == 10 || posicaoComputador == 15)
+            {
+                Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador avançará {casaAvanco} casas!");
+                posicaoComputador += casaAvanco;
+            }
 
-            return (resultadoUsuario,resultadoComputador);
+            return (posicaoUsuario, posicaoComputador);
         }
 
-        static int RodadaJogador(string nomeJogador)
+        static int RodadaJogador(string nomeJogador, int posicaoUsuario, int casaAvanco)
+           
         {
             Console.WriteLine($"\nTurno do(a) {nomeJogador}:");
 
@@ -114,9 +110,19 @@ namespace jogoDados.ConsoleApp
 
             }
             int resultadoUsuario = geradorNumeros.Next(1, 7);
+            posicaoUsuario += resultadoUsuario;
             Console.WriteLine($"\n\nO valor sorteado para {nomeJogador} foi {resultadoUsuario}!");
 
-            return resultadoUsuario;
+            //Avanço extra: Se o competidor parar em uma posição específica(ex.: 5, 10, 15), ele avança +3 casas.
+            if (posicaoUsuario == 5 || posicaoUsuario == 10 || posicaoUsuario == 15)
+            {
+                Console.WriteLine($"Parou na casa {posicaoUsuario}. Você avançará {casaAvanco} casas, {nomeJogador}!");
+                posicaoUsuario += casaAvanco;
+                Console.ReadLine();
+            }
+
+
+            return posicaoUsuario;
         }
 
         static string ExibirMenuContinuar(){
