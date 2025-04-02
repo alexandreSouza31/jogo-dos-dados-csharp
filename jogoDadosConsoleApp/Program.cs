@@ -26,6 +26,10 @@ namespace jogoDados.ConsoleApp
 
                     posicaoUsuario += resultadoUsuario;
 
+                    //Avanço extra: Se o competidor parar em uma posição específica(ex.: 5, 10, 15), ele avança +3 casas.
+                    //Recuo: Se o competidor parar em outra posição específica(ex.: 7, 13, 20), ele recua -2 casas.
+                    //Rodada extra: Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
+
 
                     if (posicaoUsuario >= limiteLinhaChegada)
                     {
@@ -35,10 +39,12 @@ namespace jogoDados.ConsoleApp
 
                         continue;
                     }
-                    else Console.WriteLine($"\nO jogador está na posição: {posicaoUsuario} de {limiteLinhaChegada}.");
 
-                    Console.Write("\nDigite Enter para continuar...");
-                    Console.ReadLine();
+                    else 
+                    { 
+                        Console.WriteLine("********************************************************");
+                        Console.WriteLine($"\nO jogador está na posição: {posicaoUsuario} de {limiteLinhaChegada}.");
+                    }
 
                     posicaoComputador += resultadoComputador;
 
@@ -52,7 +58,7 @@ namespace jogoDados.ConsoleApp
                         continue;
                     }
                     else Console.WriteLine($"\nO Computador está na posição: {posicaoComputador} de {limiteLinhaChegada}.");
-                    Console.WriteLine("------------------------------");
+                    Console.WriteLine("********************************************************");
 
                     Console.WriteLine("\nDigite Enter para continuar...");
                     Console.ReadLine();
@@ -69,13 +75,27 @@ namespace jogoDados.ConsoleApp
         {
             //Console.Clear();
             Console.WriteLine("------------------------------");
-            Console.WriteLine("      Jogo  de Dados");
+            Console.WriteLine("      Jogo de Dados");
+            Console.WriteLine("------------------------------");
         }
 
         static (int resultadoUsuário,int resultadoComputador) RolarDado(string nomeJogador="")
         {
-            bool vezJogador = true;
+            int resultadoUsuario = RodadaJogador(nomeJogador);
 
+            Random geradorNumeros = new Random();
+            Console.WriteLine("\n\nTurno do Computador:");
+            Console.ReadLine();
+
+            int resultadoComputador = geradorNumeros.Next(1, 7);
+            Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
+
+
+            return (resultadoUsuario,resultadoComputador);
+        }
+
+        static int RodadaJogador(string nomeJogador)
+        {
             Console.WriteLine($"\n\nTurno do(a) {nomeJogador}:");
 
             Random geradorNumeros = new Random();
@@ -84,23 +104,17 @@ namespace jogoDados.ConsoleApp
             {
                 Console.Write("\n\nPressione Enter para rolar o dado:");
                 Console.ReadLine();
-                
+
             }
             int resultadoUsuario = geradorNumeros.Next(1, 7);
             Console.WriteLine($"\n\nO valor sorteado para {nomeJogador} foi {resultadoUsuario}!");
 
-            vezJogador = false;
-            Console.WriteLine("\n\nTurno do Computador:");
-            int resultadoComputador = geradorNumeros.Next(1, 7);
-            Console.WriteLine($"\n\nO valor sorteado para o Computador foi {resultadoComputador}!");
-
-
-            return (resultadoUsuario,resultadoComputador);
+            return resultadoUsuario;
         }
 
         static string ExibirMenuContinuar(){
             Console.WriteLine("Deseja continuar? [s/n]");
-            string opcaoContinuar = Console.ReadLine()!.ToUpper();//essa exclamação diz pro VS não reclamar
+            string opcaoContinuar = Console.ReadLine()!.ToUpper();
 
             return opcaoContinuar;
         }
