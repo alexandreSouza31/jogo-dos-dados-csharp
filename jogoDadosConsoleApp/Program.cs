@@ -21,7 +21,7 @@ namespace jogoDados.ConsoleApp
                 while (jogoEmAndamento) 
                 {
                     Console.Clear();
-                    ExibirCabeçalho();
+                    ExibirCabeçalho(nomeJogador,posicaoUsuario,posicaoComputador);
 
                     var (resultadoUsuario, resultadoComputador )= RolarDado(nomeJogador);
 
@@ -36,6 +36,8 @@ namespace jogoDados.ConsoleApp
                     {
                         Console.WriteLine("\nParabéns! Você alcançou a linha de chegada!");
                         Console.ReadLine();
+                        ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
+
                         jogoEmAndamento = false;
 
                         continue;
@@ -52,7 +54,9 @@ namespace jogoDados.ConsoleApp
 
                     if (posicaoComputador >= limiteLinhaChegada)
                     {
+                        Console.Clear();
                         Console.WriteLine("\nQue pena o Computador alcançou a linha de chegada!");
+                        ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
                         Console.ReadLine() ;
                         jogoEmAndamento = false;
 
@@ -72,12 +76,14 @@ namespace jogoDados.ConsoleApp
             }
         }
 
-        static void ExibirCabeçalho()
+        static void ExibirCabeçalho(string nomeJogador, int posicaoUsuario, int posicaoComputador)
         {
             //Console.Clear();
-            Console.WriteLine("------------------------------");
+            Console.WriteLine("------------------------------------------------------------");
             Console.WriteLine("      Jogo de Dados");
-            Console.WriteLine("------------------------------");
+            Console.WriteLine($"\n Nome do jogador: {nomeJogador}");
+            Console.WriteLine($"Posição do jogador: {posicaoUsuario}\t\tPosição do Computador: {posicaoComputador}");
+            Console.WriteLine("------------------------------------------------------------");
         }
 
         static (int resultadoUsuário,int resultadoComputador) RolarDado(string nomeJogador="")
@@ -103,7 +109,7 @@ namespace jogoDados.ConsoleApp
 
             if (!string.IsNullOrEmpty(nomeJogador))
             {
-                Console.Write("\n\nPressione Enter para rolar o dado:");
+                Console.Write("\nPressione Enter para rolar o dado:");
                 Console.ReadLine();
 
             }
