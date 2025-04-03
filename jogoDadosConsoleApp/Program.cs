@@ -14,10 +14,14 @@ namespace jogoDados.ConsoleApp
 
                 int casaAvanco = 3;
                 int casaRecuo = 2;
+                int rodadaExtra = 6;
 
                 bool jogoEmAndamento = true;
 
                 Console.Clear();
+                Console.WriteLine("------------------------------------------------------------");
+                Console.WriteLine("      Jogo de Dados");
+                Console.WriteLine("------------------------------------------------------------");
                 Console.Write("Digite o seu nome de Usuário: ");
                 string nomeJogador = Console.ReadLine()!;
 
@@ -26,7 +30,7 @@ namespace jogoDados.ConsoleApp
                     Console.Clear();
                     ExibirCabeçalho(nomeJogador,posicaoUsuario,posicaoComputador);
 
-                    (posicaoUsuario, posicaoComputador) = RolarDado(nomeJogador,posicaoUsuario,posicaoComputador,casaAvanco,casaRecuo);
+                    (posicaoUsuario, posicaoComputador) = RolarDado(nomeJogador,posicaoUsuario,posicaoComputador,casaAvanco,casaRecuo, rodadaExtra);
 
                     if (posicaoUsuario >= limiteLinhaChegada)
                     {
@@ -49,7 +53,7 @@ namespace jogoDados.ConsoleApp
                         continue;
                     }
 
-                    Console.WriteLine("\nDigite Enter para continuar...");
+                    Console.WriteLine("\nPressione Enter para continuar...");
                     Console.ReadLine();
                 }
 
@@ -69,18 +73,37 @@ namespace jogoDados.ConsoleApp
             Console.WriteLine("------------------------------------------------------------");
         }
 
-        static (int , int ) RolarDado(string nomeJogador, int posicaoUsuario, int posicaoComputador, int casaAvanco, int casaRecuo)
+        static (int , int ) RolarDado(string nomeJogador, int posicaoUsuario, int posicaoComputador, int casaAvanco, int casaRecuo, int numeroRodadaExtra)
         {
-            posicaoUsuario = RodadaJogador(nomeJogador, posicaoUsuario,casaAvanco,casaRecuo);
-            Console.Write("Digite Enter para continuar...");
-            Console.ReadLine();
 
-            posicaoComputador = RodadaComputador(posicaoComputador, casaAvanco, casaRecuo);
+            int resultadoUsuario, resultadoComputador;
+            (posicaoUsuario, resultadoUsuario) = RodadaJogador(nomeJogador, posicaoUsuario, casaAvanco, casaRecuo);
+            (posicaoComputador, resultadoComputador) = RodadaComputador(posicaoComputador, casaAvanco, casaRecuo);
+
+            while (resultadoUsuario == numeroRodadaExtra)
+            {
+                Console.Clear();
+                ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
+                Console.Write($"\nRodada extra para você por tirar {numeroRodadaExtra}!");
+                (posicaoUsuario, resultadoUsuario) = RodadaJogador(nomeJogador, posicaoUsuario, casaAvanco, casaRecuo);
+                ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
+            }
+            while (resultadoComputador == numeroRodadaExtra)
+            {
+                Console.Clear();
+                ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
+                Console.Write($"\nRodada extra para o computador por tirar {numeroRodadaExtra}!");
+                (posicaoComputador, resultadoComputador) = RodadaComputador(posicaoComputador, casaAvanco, casaRecuo);
+                ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
+            }
+
+            Console.Clear();
+            ExibirCabeçalho(nomeJogador, posicaoUsuario, posicaoComputador);
 
             return (posicaoUsuario, posicaoComputador);
         }
 
-        static int RodadaJogador(string nomeJogador, int posicaoUsuario, int casaAvanco, int casaRecuo)
+        static (int, int) RodadaJogador(string nomeJogador, int posicaoUsuario, int casaAvanco, int casaRecuo)
            
         {
             Console.WriteLine($"\nTurno do(a) {nomeJogador}:");
@@ -96,11 +119,14 @@ namespace jogoDados.ConsoleApp
             int resultadoUsuario = geradorNumeros.Next(1, 7);
             posicaoUsuario += resultadoUsuario;
             Console.WriteLine($"\n\nO valor sorteado para {nomeJogador} foi {resultadoUsuario}!");
+            Console.Write("\nPressione Enter para continuar...");
+            Console.ReadLine();
 
             if (posicaoUsuario == 5 || posicaoUsuario == 10 || posicaoUsuario == 15)
             {
                 Console.WriteLine($"Parou na casa {posicaoUsuario}. Você avançará {casaAvanco} casas, {nomeJogador}!");
                 posicaoUsuario += casaAvanco;
+                Console.Write("\nPressione Enter para continuar...");
                 Console.ReadLine();
             }
 
@@ -111,23 +137,26 @@ namespace jogoDados.ConsoleApp
             }
 
 
-            return posicaoUsuario;
+            return (posicaoUsuario,resultadoUsuario);
         }
 
-        static int RodadaComputador( int posicaoComputador, int casaAvanco, int casaRecuo)
+        static (int,int) RodadaComputador( int posicaoComputador, int casaAvanco, int casaRecuo)
 
         {
             Console.WriteLine("\n\nTurno do Computador:");
 
             Random geradorNumeros = new Random();
             int resultadoComputador = geradorNumeros.Next(1, 7);
-            Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
             posicaoComputador += resultadoComputador;
+            Console.WriteLine($"\nO valor sorteado para o Computador foi {resultadoComputador}!");
+            Console.Write("\nPressione Enter para continuar...");
+            Console.ReadLine();
 
             if (posicaoComputador == 5 || posicaoComputador == 10 || posicaoComputador == 15)
             {
                 Console.WriteLine($"Parou na casa {posicaoComputador}. O Computador avançará {casaAvanco} casas!");
                 posicaoComputador += casaAvanco;
+                Console.Write("\nPressione Enter para continuar...");
                 Console.ReadLine();
             }
 
@@ -137,7 +166,7 @@ namespace jogoDados.ConsoleApp
                 posicaoComputador -= casaRecuo;
             }
 
-            return posicaoComputador;
+            return (posicaoComputador, resultadoComputador);
         }
 
         static string ExibirMenuContinuar(){
